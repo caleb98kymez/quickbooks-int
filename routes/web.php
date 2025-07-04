@@ -16,3 +16,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/initiate-qbo-sync', 'App\Http\Controllers\QboSyncController@initiateSync');
