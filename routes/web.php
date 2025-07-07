@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::get('/initiate-qbo-sync', 'App\Http\Controllers\QboSyncController@initiateSync');
+Route::get('/qbo_redirect', 'App\Http\Controllers\QboSyncController@qboRedirect');
