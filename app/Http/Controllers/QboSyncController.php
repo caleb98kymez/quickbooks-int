@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\TransferStats;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use QuickBooksOnline\API\Core\OAuth\OAuth2\OAuth2LoginHelper;
@@ -53,5 +56,26 @@ class QboSyncController extends Controller
         $this->accessTokenObj = $this->OAuth2LoginHelper->exchangeAuthorizationCodeForToken($request->get('code'), $request->get('realmId'));
 
         return $this->accessTokenObj;
+    }
+
+    public function qboRedirectSync(Request $request) {
+        Log::info('Redirect Sync Request:');
+        Log::info(json_encode($request->all(), JSON_PRETTY_PRINT));
+    }
+
+    public function sendAuthorizationRequest() {
+        // Send the Request to get the authorization code.
+        $base = config('qbosync.latest.authorization_endpoint');
+
+        $query = http_build_query([
+            'response_type' => 'code',
+            'client_id' => config('qbosync.client_id'),
+            'redirect_uri' => config('qbosync.redirect_uri'),
+            'scope' => config('qbosync.scope.accounting'),
+            'state' => '1234567890',
+        ]);
+
+        Log::info($base . '?' . $query);
+        return redirect($base . '?' . $query);
     }
 }
